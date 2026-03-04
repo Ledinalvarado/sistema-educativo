@@ -16,8 +16,19 @@ class FacultyFactory extends Factory
      */
     public function definition(): array
     {
-        return [
+
             //
+//            $faculties = [
+//                'ICC',
+//                'CIVIL',
+//                'INDUSTRIAL',
+//                'MEDICINA',
+//                'ENFERMERIA'
+//            ];
+
+        return [
+          //  'name' => $this->faker->unique()->randomElement($faculties),
         ];
+
     }
 }
