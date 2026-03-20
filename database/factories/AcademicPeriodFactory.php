@@ -16,8 +16,21 @@ class AcademicPeriodFactory extends Factory
      */
     public function definition(): array
     {
+        $year = fake()->numberBetween(2022, 2027);
+        $semester = fake()->randomElement(['I', 'II']);
+
+        $startDate = fake()->dateTimeBetween("$year-01-01", "$year-06-30");
+
+        $endDate = (clone $startDate)->modify('+4 months');
+
         return [
-            //
+            'name' => $year . '-' . $semester,
+
+            'start_date' => $startDate->format('Y-m-d'),
+
+            'end_date' => $endDate->format('Y-m-d'),
+
+            'status' => fake()->randomElement(['active', 'closed']),
         ];
     }
 }

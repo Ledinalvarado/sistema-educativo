@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faculty;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class StudentController extends Controller
 {
@@ -13,6 +15,54 @@ class StudentController extends Controller
     public function index()
     {
         //
+
+       // echo "hello";
+       // $estudiantes = Student::all();
+       // dd($estudiantes);
+
+        //muestra todos los registros de la tabla
+        //$estudiantes = Student::all();
+        //dd($estudiantes);
+
+        //$estudiantes =Student::with('faculty')->get();
+        //dd($estudiantes);
+
+        $estudiantes = Student::with('faculty:name,id')->get()->map(
+            function($estudiante){
+                $estudiante -> faculty_name = $estudiante->faculty->name ?? 'SIN FACULTAD';
+//MOSTRAR EL ID DE LA FACULTAD
+                return $estudiante;
+            }
+        );
+
+
+
+
+
+
+
+
+
+
+
+
+        //muestra los registros con la informacion relacionada a facultad
+//         $estudiantes = Student::with('faculty')->get();
+
+        //asi mostramos mass información de la relación de Faculty
+//        $estudiantes = Student::with('faculty:name,id')->get()->map(function($estudiante) {
+//            $estudiante->faculty_name = $estudiante->faculty->name ?? 'Sin facultad';
+//            $estudiante->faculty_id = $estudiante->faculty->id ?? 'Sin ID de facultad';
+//            return $estudiante;
+//        });;
+
+
+//        dd($estudiantes);
+
+        return Inertia::render('Student/Index', [
+            'estudiantes' => $estudiantes
+
+        ]);
     }
 
     /**
@@ -21,6 +71,11 @@ class StudentController extends Controller
     public function create()
     {
         //
+
+        $faculties=Faculty::all();
+        return Inertia::render('Student/Create', [
+            'faculties' => $faculties
+        ]);
     }
 
     /**
