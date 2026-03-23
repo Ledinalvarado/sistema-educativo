@@ -1,32 +1,45 @@
-
-
 <template>
-<AuthenticatedLayout>
-
-
-
+  <AuthenticatedLayout>
 
     <v-card>
-        <v-card-title>
-            REGISTRO DE ESTUDIANTES
-        </v-card-title>
+      <v-card-title>
+        REGISTRO DE ESTUDIANTES
+      </v-card-title>
+
+      <v-card-text>
+        <form>
+          <v-container fluid>
+            <v-row>
 
 
+              <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="state.student_code"
+                    :counter="10"
+                    :error-messages="v$.student_code.$errors.map(e => e.$message)"
+                    label="CÓDIGO"
+                    required
+                    base-color="grey"
+                    @blur="v$.student_code.$touch"
+                    @input="v$.student_code.$touch"
+                ></v-text-field>
+              </v-col>
 
-        <v-card-text>
-
-            <form>
+              <v-col cols="12" md="6">
                 <v-text-field
                     v-model="state.name"
                     :counter="10"
                     :error-messages="v$.name.$errors.map(e => e.$message)"
-                    label="Name"
+                    label="NOMBRE"
                     required
                     base-color="grey"
                     @blur="v$.name.$touch"
                     @input="v$.name.$touch"
                 ></v-text-field>
+              </v-col>
 
+
+              <v-col cols="12" md="6">
                 <v-text-field
                     v-model="state.email"
                     :error-messages="v$.email.$errors.map(e => e.$message)"
@@ -35,50 +48,70 @@
                     @blur="v$.email.$touch"
                     @input="v$.email.$touch"
                 ></v-text-field>
+              </v-col>
 
+              <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="state.semester"
+                    :error-messages="v$.semester.$errors.map(e => e.$message)"
+                    label="SEMESTRE"
+                    required
+                    @blur="v$.semester.$touch"
+                    @input="v$.semester.$touch"
+                ></v-text-field>
+              </v-col>
+
+
+              <v-col cols="12" md="6">
                 <v-select
                     v-model="state.id"
-
-                    :error-messages="v$.select.$errors.map(e => e.$message)"
+                    :error-messages="v$.faculty_id.$errors.map(e => e.$message)"
                     :items="faculties"
-                    label="Facultades"
-
+                    label="FACULTADES"
                     item-title="name"
                     item-value="id"
                     variant="outlined"
                     density="comfortable"
-
                     required
-                    @blur="v$.select.$touch"
-                    @change="v$.select.$touch"
+                    @blur="v$.faculty_id.$touch"
+                    @change="v$.faculty_id.$touch"
                 ></v-select>
+              </v-col>
 
-                <v-checkbox
-                    v-model="state.checkbox"
-                    :error-messages="v$.checkbox.$errors.map(e => e.$message)"
-                    label="Do you agree?"
-                    indent-details
+              <v-col cols="12" md="6">
+                <v-select
+                    v-model="state.items"
+                    :error-messages="v$.status.$errors.map(e => e.$message)"
+                    :items="items"
+                    label="ESTADOS"
+                    item-title="name"
+                    item-value="id"
+                    variant="outlined"
+                    density="comfortable"
                     required
-                    @blur="v$.checkbox.$touch"
-                    @change="v$.checkbox.$touch"
-                ></v-checkbox>
+                    @blur="v$.status.$touch"
+                    @change="v$.status.$touch"
+                ></v-select>
+              </v-col>
 
+
+              <v-col cols="12">
                 <v-btn
                     class="me-4"
                     @click="v$.$validate"
                 >
-                    submit
+                  submit
                 </v-btn>
-<!--                <v-btn @click="clear">-->
-<!--                    clear-->
-<!--                </v-btn>-->
-            </form>
+              </v-col>
 
-        </v-card-text>
+            </v-row>
 
+          </v-container>
+        </form>
+      </v-card-text>
     </v-card>
 
-</AuthenticatedLayout>
+  </AuthenticatedLayout>
 </template>
 
 <script>
@@ -87,77 +120,68 @@ import {Link, usePage} from '@inertiajs/vue3'
 import {computed} from 'vue'
 
 
-import { reactive } from 'vue'
-import { useVuelidate } from '@vuelidate/core'
-import { email, required, helpers } from '@vuelidate/validators'
+import {reactive} from 'vue'
+import {useVuelidate} from '@vuelidate/core'
+import {email, required, helpers,minLength,maxLength} from '@vuelidate/validators'
+
 export default {
-    name: 'Create',
-    components: {AuthenticatedLayout, Link},
-    setup() {
-        const page = usePage()
+  name: 'Create',
+  components: {AuthenticatedLayout, Link},
+  setup() {
+    const page = usePage()
 
-        const faculties = computed(() => page.props.faculties)
+    const faculties = computed(() => page.props.faculties)
 
-        // const headers = [
-            // {title: 'Enrollment Date', key: 'enrollment_date'},
-
-            // {title: 'Estado', key: 'status'},
-            // {title: 'Estudiante', key: 'student_name'},
-            // {title: 'Curso', key: 'course_name'},
-            // {title: 'Descripción del Curso', key: 'course_description'}
-        // ]
-
-
-
-
-
-
-        const form = {
-            name: '',
-            email: '',
-            select: null,
-            checkbox: null,
-        }
-
-        const state = reactive({
-            ...form,
-        })
-
-        const items = [
-            'Item 1',
-            'Item 2',
-            'Item 3',
-            'Item 4',
-        ]
-
-        const rules = {
-            name: { required: helpers.withMessage('Nombre es Obligatorio',required) },
-            email: { required, email },
-            select: { required },
-            items: { required },
-            checkbox: { required },
-        }
-
-        const v$ = useVuelidate(rules, state)
-
-        // function clear () {
-        //     v$.value.$reset()
-        //
-        //     for (const [key, value] of Object.entries(initialState)) {
-        //         state[key] = value
-        //     }
-        // }
-
-        return {
-            // headers,
-            faculties,
-            v$,
-            state,
-            rules,
-            items,
-            form,
-        }
+    const form = {
+      student_code:'',
+      name: '',
+      email: '',
+      select: null,
+      checkbox: null,
+      semester: '',
+      status:'',
+      faculty_id:''
     }
+
+    const state = reactive({
+      ...form,
+    })
+
+    const items = [
+      'active',
+      'inactive',
+
+    ]
+
+    const rules = {
+        student_code: {
+            required: helpers.withMessage('El código es Obligatorio', required),
+        },
+        name: {
+        required: helpers.withMessage('Nombre es Obligatorio', required),
+      },
+      email: {required: helpers.withMessage('El correo es Obligatorio',required), email},
+      semester: {required: helpers.withMessage('El semestre es Obligatorio',required)},
+      faculty_id: {required: helpers.withMessage('La facultad es Obligatoria',required)},
+      status: {required: helpers.withMessage('El estado es Obligatorio',required)},
+      select: {required},
+      items: {required},
+      // checkbox: {required},
+    }
+
+    const v$ = useVuelidate(rules, state)
+
+
+    return {
+      // headers,
+      faculties,
+      v$,
+      state,
+      rules,
+      items,
+      form,
+    }
+  }
 }
 
 </script>
