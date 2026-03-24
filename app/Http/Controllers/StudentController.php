@@ -16,9 +16,9 @@ class StudentController extends Controller
     {
         //
 
-       // echo "hello";
-       // $estudiantes = Student::all();
-       // dd($estudiantes);
+        // echo "hello";
+        // $estudiantes = Student::all();
+        // dd($estudiantes);
 
         //muestra todos los registros de la tabla
         //$estudiantes = Student::all();
@@ -28,22 +28,12 @@ class StudentController extends Controller
         //dd($estudiantes);
 
         $estudiantes = Student::with('faculty:name,id')->get()->map(
-            function($estudiante){
-                $estudiante -> faculty_name = $estudiante->faculty->name ?? 'SIN FACULTAD';
+            function ($estudiante) {
+                $estudiante->faculty_name = $estudiante->faculty->name ?? 'SIN FACULTAD';
 //MOSTRAR EL ID DE LA FACULTAD
                 return $estudiante;
             }
         );
-
-
-
-
-
-
-
-
-
-
 
 
         //muestra los registros con la informacion relacionada a facultad
@@ -72,7 +62,7 @@ class StudentController extends Controller
     {
         //
 
-        $faculties=Faculty::all();
+        $faculties = Faculty::all();
         return Inertia::render('Student/Create', [
             'faculties' => $faculties
         ]);
@@ -84,6 +74,25 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //
+//        dd($request);
+
+
+//        $validated = $request->validate([
+//            'student_code' => 'required|max:10',
+//            'name' => 'required',
+//            'email' => 'required|email',
+//            'semester' => 'required',
+//            'faculty_id' => 'required',
+//            'status' => 'required',
+//        ]);
+//
+//
+//        Student::create($validated);
+//
+//
+//        return redirect()->route('student.index')
+//            ->with('success', 'Estudiante creado correctamente');
+
     }
 
     /**
